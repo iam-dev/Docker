@@ -7,6 +7,7 @@ MAINTAINER IaM <DEVELOPER>
 
 ENV GITHUB_REPOSITORY  https://raw.githubusercontent.com/iam-dev/Docker/master
 ENV DOCKER_FILE_DIR apache-php
+ENV PHP_VERSION 7.2
 
 # Install apache2
 RUN buildDeps='xz-utils' \
@@ -42,24 +43,24 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 RUN /usr/sbin/update-locale
 
-# Add repository for latest built PHP packages, e.g. 7.12which isn't otherwise available in Xenial repositories
+# Add repository for latest built PHP packages, e.g. 7.2 which isn't otherwise available in Xenial repositories
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN apt-get update
 
 # Install PHP 7.2 with FPM and other various commonly used modules, including MySQL client
 RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
-    php7.2 php7.2-fpm libapache2-mod-php7.2 libapache2-mod-php \
-    php7.2-bcmath php7.2-bz2 php7.2-cli php7.2-common php7.2-curl \
-    php7.2-dev php7.2-fpm php7.2-gd php7.2-gmp php7.2-imap php7.2-intl \
-    php7.2-json php7.2-ldap php7.2-mbstring php7.2-mysql \
-    php7.2-odbc php7.2-opcache php7.2-pgsql php7.2-phpdbg php7.2-pspell \
-    php7.2-readline php7.2-recode php7.2-soap php7.2-sqlite3 \
-    php7.2-tidy php7.2-xml php7.2-xmlrpc php7.2-xsl php7.2-zip
+    php${PHP_VERSION} php${PHP_VERSION}-fpm libapache2-mod-php${PHP_VERSION} libapache2-mod-php \
+    php${PHP_VERSION}-bcmath php${PHP_VERSION}-bz2 php${PHP_VERSION}-cli php${PHP_VERSION}-common php${PHP_VERSION}-curl \
+    php${PHP_VERSION}-dev php${PHP_VERSION}-fpm php${PHP_VERSION}-gd php${PHP_VERSION}-gmp php${PHP_VERSION}-imap php${PHP_VERSION}-intl \
+    php${PHP_VERSION}-json php${PHP_VERSION}-ldap php${PHP_VERSION}-mbstring php${PHP_VERSION}-mysql \
+    php${PHP_VERSION}-odbc php${PHP_VERSION}-opcache php${PHP_VERSION}-pgsql php${PHP_VERSION}-phpdbg php${PHP_VERSION}-pspell \
+    php${PHP_VERSION}-readline php${PHP_VERSION}-recode php${PHP_VERSION}-soap php${PHP_VERSION}-sqlite3 \
+    php${PHP_VERSION}-tidy php${PHP_VERSION}-xml php${PHP_VERSION}-xmlrpc php${PHP_VERSION}-xsl php${PHP_VERSION}-zip
 
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/app.zip /var/www/html/
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/run.sh /run.sh
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/001-docker.conf /etc/apache2/sites-available/
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/run.sh /run.sh
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/001-docker.conf /etc/apache2/sites-available/
 RUN ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/
 
 # Unzip folders
