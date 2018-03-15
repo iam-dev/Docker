@@ -58,6 +58,7 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
 
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/run.sh /usr/local/bin/run.sh
 
 # Unzip folders
 RUN unzip /var/www/html/app.zip -d /var/www/html/ \
@@ -73,9 +74,17 @@ RUN a2enmod rewrite
 # Manually set up the apache enviroment variables
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
+ENV APACHE_RUN_DIR /var/run/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_SERVERADMIN admin@localhost
+ENV APACHE_SERVERNAME localhost
+ENV APACHE_SERVERALIAS docker.localhost
+ENV APACHE_DOCUMENTROOT /var/www
 
 RUN chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} /var/www /var/www/*
-
+RUN chmod +x /usr/local/bin/run.sh
 
 # cleanup install
 RUN apt-get clean \
@@ -83,4 +92,4 @@ RUN apt-get clean \
 
 EXPOSE 80 
 
-CMD ["apache2ctl", "-D", "FOREGROUND"]]
+CMD ["bash", "/usr/local/bin/run.sh"]
