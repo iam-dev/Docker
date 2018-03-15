@@ -60,8 +60,7 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/run.sh /run.sh
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/001-docker.conf /etc/apache2/sites-available/
-RUN ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/sites-available/001-docker.conf /etc/apache2/sites-available/
 
 # Unzip folders
 RUN unzip /var/www/html/app.zip -d /var/www/html/ \
@@ -77,22 +76,19 @@ RUN a2enmod rewrite
 # Manually set up the apache enviroment variables
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_PID_FILE /var/run/apache2.pid
-ENV APACHE_RUN_DIR /var/run/apache2
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_SERVERADMIN admin@localhost
-ENV APACHE_SERVERNAME localhost
-ENV APACHE_SERVERALIAS docker.localhost
-ENV APACHE_DOCUMENTROOT /var/www
+ENV VIRTUALHOST docker.dev
 
-RUN chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} /var/www /var/www/*
-RUN chmod +x /run.sh
+EXPOSE 80 
 
 # cleanup install
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/www/html/*.zip /var/www/html/app/
 
-EXPOSE 80 
 
-CMD ["apache2ctl", "-D", "FOREGROUND"]]
+RUN chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} /var/www /var/www/*
+RUN chmod +x /apache.sh
+ENTRYPOINT apache.sh
+
+VOLUME /var/www
+
+WORKDIR /var/www
