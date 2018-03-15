@@ -59,7 +59,7 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
 
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/run.sh /run.sh
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/apache.sh /apache.sh
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/sites-available/001-docker.conf /etc/apache2/sites-available/
 
 # Unzip folders
