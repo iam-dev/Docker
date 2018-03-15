@@ -7,8 +7,13 @@ VERSION 0.1
 To build:
 1. Install docker (http://docker.io)
 2. Checkout source: 
+```
+git clone https://github.com/iam-dev/Docker.git
+```
 3. Build container: 
 ```
+cd Docker
+cd apache
 docker build -t docker_apache:0.1 .
 ```
 4. Check docker images: 

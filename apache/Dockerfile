@@ -6,6 +6,11 @@ FROM ubuntu:17.10
 MAINTAINER IaM <DEVELOPER>
 
 ENV GITHUB_REPOSITORY  https://github.com/iam-dev/Docker/tree/master
+
+# Install tools
+RUN apt-get install -y unzip
+
+# Install apache2
 RUN buildDeps='xz-utils' \
     && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -24,10 +29,12 @@ RUN buildDeps='xz-utils' \
 ADD ${GITHUB_REPOSITORY}/apache/index.html /var/www/html/index.html
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
 
+RUN unzip /var/www/html/vendor.zip
+
 # cleanup install
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-    
+
 EXPOSE 80 
 
 CMD ["apache2ctl", "-D", "FOREGROUND"]]
