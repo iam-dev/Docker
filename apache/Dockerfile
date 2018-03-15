@@ -35,6 +35,13 @@ RUN apt-get install -y \
     software-properties-common \
     python-software-properties
 
+# Set up locales
+RUN locale-gen en_US.UTF-8
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8
+RUN /usr/sbin/update-locale
+
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
 
