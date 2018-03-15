@@ -1,4 +1,4 @@
-# VERSION 0.1
+# VERSION 0.5
 # DOCKER-VERSION 17.12.0-ce, build c97c6d6
 
 FROM ubuntu:17.10
@@ -58,7 +58,9 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
 
 ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/run.sh /usr/local/bin/run.sh
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/run.sh /run.sh
+ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/001-docker.conf /etc/apache2/sites-available/
+RUN ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/
 
 # Unzip folders
 RUN unzip /var/www/html/app.zip -d /var/www/html/ \
@@ -84,7 +86,7 @@ ENV APACHE_SERVERALIAS docker.localhost
 ENV APACHE_DOCUMENTROOT /var/www
 
 RUN chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} /var/www /var/www/*
-RUN chmod +x /usr/local/bin/run.sh
+RUN chmod +x /run.sh
 
 # cleanup install
 RUN apt-get clean \
@@ -92,4 +94,4 @@ RUN apt-get clean \
 
 EXPOSE 80 
 
-CMD ["bash", "/usr/local/bin/run.sh"]
+CMD ["apache2ctl", "-D", "FOREGROUND"]]
