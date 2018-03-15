@@ -30,7 +30,7 @@ ADD ${GITHUB_REPOSITORY}/apache/index.html /var/www/html/index.html
 ADD ${GITHUB_REPOSITORY}/vendor.tar.gz /var/www/html/
 
 #RUN tar -xzf /var/www/html/vendor.tar.gz
-tar -xzf /var/www/html/vendor.tar.gz
+
 
 # cleanup install
 RUN apt-get clean \
