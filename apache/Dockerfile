@@ -5,7 +5,7 @@ FROM ubuntu:17.10
 
 MAINTAINER IaM <DEVELOPER>
 
-ENV GITHUB_REPOSITORY  https://github.com/iam-dev/Docker/tree/master
+ENV GITHUB_REPOSITORY  https://raw.githubusercontent.com/iam-dev/Docker/master
 
 # Install apache2
 RUN buildDeps='xz-utils' \
@@ -26,15 +26,22 @@ RUN buildDeps='xz-utils' \
 # Install tools
 RUN apt-get install -y unzip
 
-ADD ${GITHUB_REPOSITORY}/apache/index.html /var/www/html/index.html
+ADD ${GITHUB_REPOSITORY}/apache/app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
 
-#RUN tar -xzf /var/www/html/vendor.tar.gz
+# Unzip folders
+RUN unzip /var/www/html/app.zip -d /var/www/html/ \
+    && unzip /var/www/html/vendor.zip -d /var/www/html/
+
+# Move app files to html folder
+RUM mv /var/www/html/app/* /var/www/html/
+
+RUN chown -R www-data:www-data /var/www /var/www/*
 
 
 # cleanup install
 RUN apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/www/html/*.zip /var/www/html/app/
 
 EXPOSE 80 
 
