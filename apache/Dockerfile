@@ -34,7 +34,7 @@ RUN unzip /var/www/html/app.zip -d /var/www/html/ \
     && unzip /var/www/html/vendor.zip -d /var/www/html/
 
 # Move app files to html folder
-RUM mv /var/www/html/app/* /var/www/html/
+RUn mv /var/www/html/app/* /var/www/html/
 
 RUN chown -R www-data:www-data /var/www /var/www/*
 
