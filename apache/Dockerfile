@@ -7,9 +7,6 @@ MAINTAINER IaM <DEVELOPER>
 
 ENV GITHUB_REPOSITORY  https://github.com/iam-dev/Docker/tree/master
 
-# Install tools
-RUN apt-get install -y unzip
-
 # Install apache2
 RUN buildDeps='xz-utils' \
     && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -26,10 +23,14 @@ RUN buildDeps='xz-utils' \
     && apt-get install -y $buildDeps --no-install-recommends \
     && apt-get install -y apache2
 
-ADD ${GITHUB_REPOSITORY}/apache/index.html /var/www/html/index.html
-ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
+# Install tools
+#RUN apt-get install -y unzip
 
-RUN unzip /var/www/html/vendor.zip
+ADD ${GITHUB_REPOSITORY}/apache/index.html /var/www/html/index.html
+ADD ${GITHUB_REPOSITORY}/vendor.tar.gz /var/www/html/
+
+#RUN tar -xzf /var/www/html/vendor.tar.gz
+tar -xzf /var/www/html/vendor.tar.gz
 
 # cleanup install
 RUN apt-get clean \
