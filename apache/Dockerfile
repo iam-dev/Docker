@@ -24,10 +24,10 @@ RUN buildDeps='xz-utils' \
     && apt-get install -y apache2
 
 # Install tools
-#RUN apt-get install -y unzip
+RUN apt-get install -y unzip
 
 ADD ${GITHUB_REPOSITORY}/apache/index.html /var/www/html/index.html
-ADD ${GITHUB_REPOSITORY}/vendor.tar.gz /var/www/html/
+ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
 
 #RUN tar -xzf /var/www/html/vendor.tar.gz
 
