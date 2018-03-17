@@ -1,0 +1,11 @@
+version: '3.3'
+
+    services:
+    
+        apache-php:
+            build: apache-php
+            restart: always
+            ports:
+                - 80:80
+            environment:
+                - VIRTUALHOST=iamdeveloper.io

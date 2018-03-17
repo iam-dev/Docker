@@ -57,10 +57,10 @@ RUN apt-get install -y --allow-downgrades --allow-remove-essential --allow-chang
     php${PHP_VERSION}-readline php${PHP_VERSION}-recode php${PHP_VERSION}-soap php${PHP_VERSION}-sqlite3 \
     php${PHP_VERSION}-tidy php${PHP_VERSION}-xml php${PHP_VERSION}-xmlrpc php${PHP_VERSION}-xsl php${PHP_VERSION}-zip
 
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/app.zip /var/www/html/
+ADD ./app.zip /var/www/html/
 ADD ${GITHUB_REPOSITORY}/vendor.zip /var/www/html/
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/apache.sh /apache.sh
-ADD ${GITHUB_REPOSITORY}/${DOCKER_FILE_DIR}/${PHP_VERSION}/sites-available/001-docker.conf /etc/apache2/sites-available/
+ADD ./apache.sh /apache.sh
+ADD ./sites-available/001-docker.conf /etc/apache2/sites-available/
 
 # Unzip folders
 RUN unzip /var/www/html/app.zip -d /var/www/html/ \
@@ -87,8 +87,9 @@ RUN apt-get clean \
 
 RUN chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} /var/www /var/www/*
 RUN chmod +x /apache.sh
-ENTRYPOINT apache.sh
 
 VOLUME /var/www
 
 WORKDIR /var/www
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]]
